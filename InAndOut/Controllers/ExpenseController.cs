@@ -34,7 +34,37 @@ namespace InAndOut.Controllers
             _db.Expenses.Add(obj);
             _db.SaveChanges();
             return RedirectToAction("Index");
+        }
 
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+
+            var obj = _db.Expenses.Find(id);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+        public IActionResult DeletePost(int? id)
+        {
+            var obj = _db.Expenses.Find(id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            _db.Expenses.Remove(obj);
+            _db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
+
 }
