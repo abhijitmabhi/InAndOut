@@ -1,10 +1,12 @@
 ﻿using InAndOut.Data;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InAndOut.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InAndOut.Controllers
 {
@@ -23,6 +25,14 @@ namespace InAndOut.Controllers
 
         public IActionResult Create()
         {
+            IEnumerable<SelectListItem> categoryType = _db.Categories.Select(i => new SelectListItem
+            {
+                Text = i.CategoryName,
+                Value = i.Id.ToString()
+            });
+
+            ViewBag.TypeDorpdown = categoryType;
+
             return View();
         }
 

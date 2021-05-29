@@ -16,8 +16,8 @@ namespace InAndOut.Models
         [Range(0.1, float.MaxValue, ErrorMessage = "Amount must be positive!")]
         public float Amount { get; set; }
         [DisplayName("Category Name")]
-        [ForeignKey("CategoryId")]
         public int? CategoryId { get; set; }
+        [ForeignKey("CategoryId")]
         public virtual Category Category { get; set; }
     }
 }
