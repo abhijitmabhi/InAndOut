@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace InAndOut.Models
@@ -14,5 +15,9 @@ namespace InAndOut.Models
         [Required]
         [Range(0.1, float.MaxValue, ErrorMessage = "Amount must be positive!")]
         public float Amount { get; set; }
+        [DisplayName("Category Name")]
+        [ForeignKey("CategoryId")]
+        public int? CategoryId { get; set; }
+        public virtual Category Category { get; set; }
     }
 }
