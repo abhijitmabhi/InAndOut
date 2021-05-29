@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InAndOut.Models;
+using InAndOut.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InAndOut.Controllers
@@ -20,28 +21,42 @@ namespace InAndOut.Controllers
         public IActionResult Index()
         {
             IEnumerable<Expense> objList = _db.Expenses;
+            foreach (var obj in objList)
+            {
+                obj.Category = _db.Categories.FirstOrDefault(u => u.Id == obj.CategoryId);
+            }
             return View(objList);
         }
 
         public IActionResult Create()
         {
-            IEnumerable<SelectListItem> categoryType = _db.Categories.Select(i => new SelectListItem
+            // IEnumerable<SelectListItem> categoryType = _db.Categories.Select(i => new SelectListItem
+            // {
+            //     Text = i.CategoryName,
+            //     Value = i.Id.ToString()
+            // });
+
+            var expenseVm = new ExpenseVm()
             {
-                Text = i.CategoryName,
-                Value = i.Id.ToString()
-            });
+                Expense = new Expense(),
+                TypeDropDown = _db.Categories.Select(i => new SelectListItem
+                {
+                    Text = i.CategoryName,
+                    Value = i.Id.ToString()
+                })
+            };
 
-            ViewBag.TypeDorpdown = categoryType;
+            // ViewBag.TypeDorpdown = categoryType;
 
-            return View();
+            return View(expenseVm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Expense obj)
+        public IActionResult Create(ExpenseVm obj)
         {
             if (!ModelState.IsValid) return View(obj);
-            _db.Expenses.Add(obj);
+            _db.Expenses.Add(obj.Expense);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
