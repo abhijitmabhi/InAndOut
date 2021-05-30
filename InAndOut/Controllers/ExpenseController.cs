@@ -99,16 +99,27 @@ namespace InAndOut.Controllers
                 return NotFound();
             }
 
+            var expenseVm = new ExpenseVm()
+            {
+                Expense = new Expense(),
+                TypeDropDown = _db.Categories.Select(i => new SelectListItem
+                {
+                    Text = i.CategoryName,
+                    Value = i.Id.ToString()
+                })
+            };
+
             var obj = _db.Expenses.Find(id);
-            return View(obj);
+            expenseVm.Expense = obj;
+            return View(expenseVm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Update(Expense obj)
+        public IActionResult Update(ExpenseVm obj)
         {
             if (!ModelState.IsValid) return View(obj);
-            _db.Expenses.Update(obj);
+            _db.Expenses.Update(obj.Expense);
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
